@@ -5,13 +5,13 @@ const Cart = (props) => {
   const cartItems = (
     <ul className={classes["cart-items"]}>
       {[{ id: "c1", name: "Sushi", amount: 2, price: 12.99 }].map((item) => (
-        <li key={item.id}>{item.id}</li>
+        <li key={item.id}>{item.name}</li>
       ))}
     </ul>
   );
 
   return (
-    <Modal>
+    <Modal onClick={props.onClick}>
       {cartItems}
       <div className={classes.total}>
         <span>Total Amount</span>

@@ -1,9 +1,14 @@
+import { useContext } from "react";
 import Input from "../UI/Input";
 import classes from "./MealForm.module.css";
 
 const MealForm = (props) => {
+  const submitHandler = (e) => {
+    e.preventDefault();
+  }
+
   return (
-    <form className={classes.form}>
+    <form onSubmit={submitHandler} className={classes.form}>
       <Input
         label="Amount"
         input={{
