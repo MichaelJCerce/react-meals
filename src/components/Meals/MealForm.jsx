@@ -1,10 +1,12 @@
-import { useContext } from "react";
+
+
 import Input from "../UI/Input";
 import classes from "./MealForm.module.css";
 
 const MealForm = (props) => {
   const submitHandler = (e) => {
     e.preventDefault();
+    props.onAddToCart(+e.target[0].value);
   }
 
   return (
