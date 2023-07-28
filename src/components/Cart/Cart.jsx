@@ -29,7 +29,7 @@ const Cart = (props) => {
 
   return (
     <Modal onClick={props.onClick}>
-      {cartItems}
+      {ctx.items.length > 0 && cartItems}
       <div className={classes.total}>
         <span>Total Amount</span>
         <span>{`$${ctx.totalAmount.toFixed(2)}`}</span>
