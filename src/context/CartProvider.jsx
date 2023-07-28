@@ -15,9 +15,28 @@ export const CartContext = React.createContext({
 
 const cartReducer = (state, action) => {
   if (action.type === "ADD") {
-    const updatedItems = state.items.concat(action.item);
+    const existingCartItemIndex = state.items.findIndex((item) => {
+      return item.id === action.item.id;
+    });
+
+    let existingCartItem = state.items[existingCartItemIndex];
+    let updatedItems;
+
+    if (existingCartItem) {
+      const updatedItem = {
+        ...existingCartItem,
+        amount: existingCartItem.amount + action.item.amount,
+      };
+
+      updatedItems = [...state.items];
+      updatedItems[existingCartItemIndex] = updatedItem;
+    } else {
+      updatedItems = state.items.concat(action.item);
+    }
+
     const updatedTotal =
       state.totalAmount + action.item.price * action.item.amount;
+
     return { items: updatedItems, totalAmount: updatedTotal };
   }
 
