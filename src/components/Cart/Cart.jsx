@@ -7,6 +7,8 @@ import classes from "./Cart.module.css";
 
 const Cart = (props) => {
   const ctx = useContext(CartContext);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [didSubmit, setDidSubmit] = useState(false);
   const [isOrdering, setIsOrdering] = useState(false);
 
   const cartItemRemoveHandler = (id) => {
@@ -14,6 +16,23 @@ const Cart = (props) => {
   };
   const cartItemAddHandler = (item) => {
     ctx.addItem({ ...item, amount: 1 });
+  };
+
+  const submitOrderHandler = async (userData) => {
+    setIsSubmitting(true);
+    await fetch(
+      "https://react-http-3eaf7-default-rtdb.firebaseio.com/orders.json",
+      {
+        method: "POST",
+        body: JSON.stringify({ user: userData, orderedItems: ctx.items }),
+      }
+    );
+    setIsSubmitting(false);
+    setDidSubmit(true);
+  };
+
+  const orderHandler = () => {
+    setIsOrdering(true);
   };
 
   const cartItems = (
@@ -31,10 +50,6 @@ const Cart = (props) => {
     </ul>
   );
 
-  const orderHandler = () => {
-    setIsOrdering(true);
-  };
-
   const modalActions = (
     <div className={classes.actions}>
       <button onClick={props.onClick} className={classes["button--alt"]}>
@@ -48,15 +63,38 @@ const Cart = (props) => {
     </div>
   );
 
-  return (
-    <Modal onClick={props.onClick}>
+  const cartModalContent = (
+    <>
       {ctx.items.length > 0 && cartItems}
       <div className={classes.total}>
         <span>Total Amount</span>
         <span>{`$${ctx.totalAmount.toFixed(2)}`}</span>
       </div>
-      {isOrdering && <Checkout onCancel={props.onClick}/>}
+      {isOrdering && (
+        <Checkout onCancel={props.onClick} onConfirm={submitOrderHandler} />
+      )}
       {!isOrdering && modalActions}
+    </>
+  );
+
+  const isSubmittingModalContent = <p>Sending order data...</p>;
+
+  const didSubmitModalContent = (
+    <>
+      <p>Successfully sent the order!</p>
+      <div className={classes.actions}>
+      <button onClick={props.onClick} className={classes.button}>
+        Close
+      </button>
+    </div>
+    </>
+  );
+
+  return (
+    <Modal onClick={props.onClick}>
+      {!isSubmitting && !didSubmit && cartModalContent}
+      {isSubmitting && isSubmittingModalContent}
+      {!isSubmitting && didSubmit && didSubmitModalContent}
     </Modal>
   );
 };
