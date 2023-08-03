@@ -29,6 +29,7 @@ const Cart = (props) => {
     );
     setIsSubmitting(false);
     setDidSubmit(true);
+    ctx.clearCart();
   };
 
   const orderHandler = () => {
@@ -83,10 +84,10 @@ const Cart = (props) => {
     <>
       <p>Successfully sent the order!</p>
       <div className={classes.actions}>
-      <button onClick={props.onClick} className={classes.button}>
-        Close
-      </button>
-    </div>
+        <button onClick={props.onClick} className={classes.button}>
+          Close
+        </button>
+      </div>
     </>
   );
 
